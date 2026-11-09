@@ -50,6 +50,9 @@ const estado = {
   editandoId: null,
 };
 
+/* Clave de localStorage donde se guarda la preferencia de tema. */
+const CLAVE_TEMA = "aurea-tema";
+
 let peticionActual = 0;
 let temporizadorToast = null;
 
@@ -62,6 +65,7 @@ const $ = (selector) => document.querySelector(selector);
 const usuarioNombre = $("#usuario-nombre");
 const usuarioAvatar = $("#usuario-avatar");
 const botonLogout = $("#logout");
+const botonTema = $("#tema");
 const botonExportar = $("#exportar");
 
 const statTotal = $("#stat-total");
@@ -810,6 +814,53 @@ function exportarCSV() {
 }
 
 /* --------------------------------------------------------------------------
+   TEMA CLARO / OSCURO
+   -------------------------------------------------------------------------- */
+
+/**
+ * Lee el tema guardado. Ante cualquier fallo (modo privado, almacenamiento
+ * bloqueado) devuelve el oscuro, que es el tema por defecto.
+ * @returns {"light"|"dark"}
+ */
+function leerTema() {
+  try {
+    return localStorage.getItem(CLAVE_TEMA) === "light" ? "light" : "dark";
+  } catch (error) {
+    return "dark";
+  }
+}
+
+/**
+ * Aplica el tema al documento y actualiza el estado del botón.
+ * @param {"light"|"dark"} tema
+ * @param {boolean} guardar - Si debe persistir la elección.
+ */
+function aplicarTema(tema, guardar = false) {
+  const esClaro = tema === "light";
+  document.documentElement.dataset.theme = tema;
+
+  if (botonTema) {
+    const etiqueta = esClaro ? "Cambiar a tema oscuro" : "Cambiar a tema claro";
+    botonTema.setAttribute("aria-pressed", String(esClaro));
+    botonTema.setAttribute("aria-label", etiqueta);
+    botonTema.title = etiqueta;
+  }
+
+  if (guardar) {
+    try {
+      localStorage.setItem(CLAVE_TEMA, tema);
+    } catch (error) {
+      /* Si no se puede guardar, el tema funciona al menos en esta visita. */
+    }
+  }
+}
+
+function alternarTema() {
+  const actual = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  aplicarTema(actual === "light" ? "dark" : "light", true);
+}
+
+/* --------------------------------------------------------------------------
    INICIALIZACIÓN Y EVENTOS
    -------------------------------------------------------------------------- */
 
@@ -834,6 +885,7 @@ function conectarEventos() {
   filtrosLimpiar.addEventListener("click", limpiarFiltros);
 
   botonExportar.addEventListener("click", exportarCSV);
+  botonTema?.addEventListener("click", alternarTema);
 
   botonLogout.addEventListener("click", async () => {
     botonLogout.disabled = true;
@@ -872,6 +924,7 @@ function conectarEventos() {
 }
 
 async function iniciar() {
+  aplicarTema(leerTema());
   configurarFechasIniciales();
   conectarEventos();
   await cargarSesion();

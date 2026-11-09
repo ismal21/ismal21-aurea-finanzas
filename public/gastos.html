@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Panel de gastos de Aurea Finanzas: registra, filtra y analiza en qué se va tu dinero.">
   <title>Mis gastos · Aurea Finanzas</title>
+
+  <!-- Aplica el tema guardado antes de pintar para evitar un destello claro. -->
+  <script>
+    try {
+      if (localStorage.getItem("aurea-tema") === "light") {
+        document.documentElement.dataset.theme = "light";
+      }
+    } catch (error) {
+      /* Si el navegador bloquea localStorage, se usa el tema oscuro. */
+    }
+  </script>
 
   <!-- Mismas fuentes que el resto del sitio -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,6 +45,16 @@
       </nav>
 
       <div class="header-actions">
+        <button class="theme-toggle" type="button" id="tema" aria-pressed="false" aria-label="Cambiar a tema claro" title="Cambiar a tema claro">
+          <!-- El CSS muestra el sol en tema oscuro y la luna en tema claro. -->
+          <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"></path>
+          </svg>
+          <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M20.5 14.4A8.6 8.6 0 0 1 9.6 3.5a8.6 8.6 0 1 0 10.9 10.9Z"></path>
+          </svg>
+        </button>
         <span class="user-chip" title="Sesión iniciada">
           <span class="user-avatar" id="usuario-avatar" aria-hidden="true">A</span>
           <span class="user-name" id="usuario-nombre">Cargando…</span>

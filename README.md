@@ -1,6 +1,6 @@
 # Aurea Finanzas · HTML, CSS, JavaScript, Node.js y PostgreSQL
 
-Aplicación de control de finanzas con tema oscuro elegante: frontend en HTML, CSS y JavaScript, y backend en **Node.js + Express + PostgreSQL**.
+Aplicación de control de finanzas con dos temas, oscuro elegante y claro cálido: frontend en HTML, CSS y JavaScript, y backend en **Node.js + Express + PostgreSQL**.
 Incluye la página principal, el registro y el login, ambos con **validación en tiempo real** y avisos de error. El backend crea cuentas, verifica contraseñas hasheadas y mantiene la sesión con una cookie.
 Tras iniciar sesión se abre el **panel de gastos**: alta, edición y eliminación de gastos, filtros por categoría y rango de fechas, gráficas de gasto mensual y por categoría, y exportación a CSV.
 
@@ -825,6 +825,7 @@ La página se sirve solo con sesión: `app.get("/gastos.html", requiereSesionPag
 ### Qué incluye
 
 - **Cabecera**: mantiene el contexto del panel; solo ofrece «Mis gastos» (página actual) y «Salir». No hay enlace a la portada para no salir del flujo de sesión.
+- **Tema claro u oscuro**: botón circular con iconos de sol y luna en la cabecera. El oscuro es el predeterminado y la elección se conserva entre visitas.
 - **Formulario**: nombre, categoría, fecha y monto. El mismo formulario sirve para crear y editar; al pulsar «Editar» en una fila se rellenan los campos y aparece el botón «Cancelar edición».
 - **Tarjetas de resumen**: total del periodo, número de gastos, promedio por gasto y categoría principal.
 - **Búsqueda**: filtro por categoría y rango `desde`/`hasta`. «Ver todo» limpia los filtros. Al abrir la página se filtra por el año actual para que la gráfica muestre los 12 meses. El listado se limita a 1000 gastos, ordenados por fecha descendente.
@@ -847,6 +848,16 @@ El listado y el resumen se piden en paralelo. Un contador de petición (`peticio
 
 La gráfica mensual usa `porMes` del resumen. Si hay un rango de fechas, rellena los meses intermedios con cero (hasta 24 columnas); si el rango es mayor, muestra solo los meses con gastos.
 
+### Tema claro y oscuro
+
+- El tema **oscuro** es el predeterminado para conservar el diseño original.
+- El botón sol/luna de la cabecera alterna entre ambos temas. En oscuro muestra el sol (pasar a claro) y en claro muestra la luna (volver a oscuro).
+- La preferencia se guarda en `localStorage` con la clave `aurea-tema`. No se envía al backend ni se mezcla con la sesión.
+- Un script breve en el `<head>` aplica el tema guardado antes de pintar la página, para evitar un destello claro al recargar.
+- `data-theme="light"` en `<html>` activa la paleta clara. Todos los overrides están dentro de `html[data-theme="light"]` en la sección 15 de `styles.css`, así que **no afectan a la portada, el login ni el registro**.
+- Si el navegador bloquea `localStorage`, se usa el tema oscuro y el cambio funciona solo durante esa visita.
+- El botón mantiene `aria-pressed` y `aria-label` actualizados para que el cambio también sea claro con lector de pantalla.
+
 ### Formato
 
 - Moneda con `Intl.NumberFormat("es-MX", { currency: "MXN" })`.
@@ -855,6 +866,8 @@ La gráfica mensual usa `porMes` del resumen. Si hay un rango de fechas, rellena
 ### Estilos
 
 La sección 14 de `styles.css` contiene el layout del panel: rejilla principal + lateral, tarjetas, formulario, tabla, gráficas, *toast* y sus *media queries*. En pantallas de hasta 720 px la tabla se convierte en tarjetas apiladas usando `data-label` y `::before`, y el panel lateral pasa a una columna.
+
+La sección 15 añade el botón de tema y la paleta clara. La paleta oscura sigue siendo la de `:root`; la clara redefine las variables y los fondos que estaban escritos con RGBA dentro de `html[data-theme="light"]`.
 
 ---
 
