@@ -1,0 +1,2418 @@
+/* ==========================================================================
+   AUREA FINANZAS · styles.css
+   Hoja de estilos compartida por index.html, login.html, registro.html
+   y gastos.html
+   --------------------------------------------------------------------------
+   ÍNDICE
+   01. Variables de diseño
+   02. Reset y estilos base
+   03. Utilidades y layout
+   04. Botones
+   05. Cabecera y navegación
+   06. Hero (portada)
+   07. Panel de vista previa (dashboard)
+   08. Secciones: beneficios, pasos y CTA
+   09. Pie de página
+   10. Página de registro (layout de autenticación)
+   11. Formulario
+   12. Animaciones
+   13. Responsive (media queries)
+   14. Panel de gastos (gastos.html)
+   ========================================================================== */
+
+
+/* ==========================================================================
+   01. VARIABLES DE DISEÑO
+   Las custom properties (--nombre) viven en :root (el <html>).
+   Cambiar un valor aquí actualiza todo el sitio: es la base de un tema.
+   ========================================================================== */
+:root {
+  /* Hace que los controles nativos (checkbox, scrollbar…) usen tonos oscuros */
+  color-scheme: dark;
+
+  /* Colores de fondo y superficies */
+  --bg: #080b10;
+  --bg-elevated: #0c1118;
+  --surface: #101720;
+  --surface-2: #151e2a;
+
+  /* Bordes y textos */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #e9eef5;
+  --text-soft: #b8c3d1;
+  --muted: #8391a4;
+
+  /* Acento elegante: dorado champagne */
+  --gold: #d4b483;
+  --gold-strong: #e7d1a8;
+  --gold-dim: rgba(212, 180, 131, 0.12);
+  --gold-line: rgba(212, 180, 131, 0.35);
+
+  /* Colores semánticos (positivo / negativo) */
+  --green: #63d6a3;
+  --red: #e59191;
+
+  /* Radios, sombras y medidas */
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --shadow-lg: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
+  --container: 1160px;
+  --header-h: 76px;
+
+  /* Tipografías: títulos con serif, texto con sans-serif */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Curva de animación reutilizable */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+
+/* ==========================================================================
+   02. RESET Y ESTILOS BASE
+   Un reset quita márgenes y comportamientos por defecto del navegador
+   para que el diseño sea consistente en todos los navegadores.
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* el padding y el borde se incluyen en el ancho */
+}
+
+* {
+  margin: 0;
+}
+
+/* El atributo hidden debe ganar a cualquier display de clase (.btn, etc.). */
+[hidden] {
+  display: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg);
+  /* Dos focos de luz muy suaves para dar profundidad al fondo oscuro */
+  background-image:
+    radial-gradient(900px 520px at 88% -10%, rgba(212, 180, 131, 0.09), transparent 60%),
+    radial-gradient(760px 520px at -5% 8%, rgba(74, 116, 168, 0.09), transparent 65%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+::selection {
+  background: rgba(212, 180, 131, 0.28);
+  color: #fff;
+}
+
+/* Anillo de foco visible solo al navegar con teclado (accesibilidad) */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Barra de desplazamiento discreta (navegadores WebKit) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #26313f;
+  border-radius: 999px;
+}
+
+
+/* ==========================================================================
+   03. UTILIDADES Y LAYOUT
+   ========================================================================== */
+
+/* Contenedor centrado con ancho máximo */
+.container {
+  width: min(100% - 3rem, var(--container));
+  margin-inline: auto;
+}
+
+/* Enlace de salto: invisible hasta recibir foco con Tab */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  background: var(--gold);
+  color: #161007;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transform: translateY(-110%);
+  transition: transform 0.2s var(--ease);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Texto pequeño en mayúsculas sobre un título */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-strong);
+}
+
+/* Punto que late suavemente */
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 0 rgba(212, 180, 131, 0.45);
+  animation: pulse 2.6s infinite;
+}
+
+/* Etiqueta pequeña encima de los títulos de sección */
+.kicker {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.9rem;
+}
+
+/* Secciones genéricas */
+.section {
+  padding-block: clamp(3.5rem, 8vw, 6.5rem);
+}
+
+.section--tight {
+  padding-top: 0;
+}
+
+.section-head {
+  max-width: 620px;
+  margin-bottom: clamp(2rem, 4vw, 3.2rem);
+}
+
+.section-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+.section-text {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 52ch;
+}
+
+.section-head--center .section-text {
+  margin-inline: auto;
+}
+
+
+/* ==========================================================================
+   04. BOTONES
+   .btn es la base; .btn-primary / .btn-outline / .btn-ghost son variantes.
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.72rem 1.3rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition:
+    background-color 0.25s var(--ease),
+    border-color 0.25s var(--ease),
+    color 0.25s var(--ease),
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold-strong), var(--gold));
+  color: #171008;
+  box-shadow: 0 10px 34px -14px rgba(212, 180, 131, 0.65);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px -14px rgba(212, 180, 131, 0.75);
+  filter: brightness(1.04);
+}
+
+.btn-outline {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.btn-outline:hover {
+  border-color: var(--gold-line);
+  background: var(--gold-dim);
+  color: var(--gold-strong);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--text-soft);
+  background: transparent;
+}
+
+.btn-ghost:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-lg {
+  padding: 0.95rem 1.65rem;
+  font-size: 0.95rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+
+/* ==========================================================================
+   05. CABECERA Y NAVEGACIÓN
+   position: sticky mantiene la barra arriba al hacer scroll.
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(8, 11, 16, 0.75);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  height: var(--header-h);
+}
+
+/* Marca: icono + nombre */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(212, 180, 131, 0.35);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(212, 180, 131, 0.22), rgba(212, 180, 131, 0.04));
+  color: var(--gold-strong);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.brand-name {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+}
+
+.brand-name span {
+  font-family: var(--font-body);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
+/* Navegación central */
+.main-nav {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+.main-nav a {
+  position: relative;
+  padding-block: 0.35rem;
+  transition: color 0.25s var(--ease);
+}
+
+/* Subrayado dorado que aparece al pasar el ratón */
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease);
+}
+
+.main-nav a:hover {
+  color: var(--text);
+}
+
+.main-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+/* ==========================================================================
+   06. HERO (PORTADA)
+   CSS Grid divide el espacio en dos columnas: texto y visual.
+   ========================================================================== */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 5rem);
+  padding-block: clamp(3.5rem, 8vw, 6.5rem) clamp(4rem, 9vw, 7.5rem);
+}
+
+.hero-title {
+  margin-top: 1.4rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 5.2vw, 4.15rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+/* <em> es énfasis; aquí lo usamos como acento dorado en cursiva */
+.hero-title em {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.hero-text {
+  margin-top: 1.5rem;
+  max-width: 48ch;
+  color: var(--muted);
+  font-size: 1.02rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.2rem;
+}
+
+.hero-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.5rem;
+  margin-top: 2.4rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.hero-points li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hero-points li::before {
+  content: "✓";
+  font-size: 0.62rem;
+  color: var(--gold);
+}
+
+.hero-visual {
+  position: relative;
+  isolation: isolate;
+}
+
+
+/* ==========================================================================
+   07. PANEL DE VISTA PREVIA (DASHBOARD)
+   Es un mockup decorativo hecho solo con HTML y CSS.
+   ========================================================================== */
+.dashboard {
+  position: relative;
+  z-index: 1;
+  max-width: 510px;
+  margin-left: auto;
+  padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+    var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Resplandor difuminado detrás de la tarjeta */
+.dashboard::before {
+  content: "";
+  position: absolute;
+  inset: 12% 8%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(212, 180, 131, 0.22), transparent 75%);
+  filter: blur(50px);
+}
+
+.dash-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dash-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dash-amount {
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3vw, 2.35rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.dash-amount span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge-up {
+  background: rgba(99, 214, 163, 0.12);
+  border: 1px solid rgba(99, 214, 163, 0.25);
+  color: var(--green);
+}
+
+/* Gráfico de barras construido con flexbox */
+.chart {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+  height: 92px;
+}
+
+.chart-bars span {
+  flex: 1;
+  height: var(--h); /* altura enviada desde el HTML: style="--h: 52%" */
+  border-radius: 5px 5px 2px 2px;
+  background: linear-gradient(180deg, var(--gold), rgba(212, 180, 131, 0.18));
+  opacity: 0.55;
+}
+
+.chart-bars span:nth-child(odd) {
+  opacity: 0.35;
+}
+
+.chart-bars span:last-child {
+  opacity: 1;
+  box-shadow: 0 0 22px rgba(212, 180, 131, 0.35);
+}
+
+.chart-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.65rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+/* Lista de movimientos */
+.dash-list {
+  margin-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+
+.dash-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-block: 0.68rem;
+}
+
+.dash-item + .dash-item {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dash-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.dash-icon--gold {
+  border-color: rgba(212, 180, 131, 0.4);
+  background: var(--gold-dim);
+  color: var(--gold-strong);
+}
+
+.dash-info {
+  min-width: 0;
+}
+
+.dash-info p {
+  font-size: 0.84rem;
+  line-height: 1.3;
+}
+
+.dash-info small {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.dash-amount-small {
+  margin-left: auto;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.is-positive {
+  color: var(--green);
+}
+
+.is-negative {
+  color: var(--red);
+}
+
+/* Tarjeta flotante de meta de ahorro */
+.float-card {
+  position: absolute;
+  left: -1.75rem;
+  bottom: -5.75rem;
+  z-index: 2;
+  width: min(250px, 68%);
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: rgba(14, 20, 29, 0.92);
+  box-shadow: 0 22px 50px -20px rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  animation: float 6s ease-in-out infinite;
+}
+
+.float-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.float-head strong {
+  color: var(--gold-strong);
+  font-size: 0.78rem;
+}
+
+.progress {
+  height: 5px;
+  margin-block: 0.6rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  width: var(--value);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #a98247, var(--gold-strong));
+}
+
+.float-card small {
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+
+/* ==========================================================================
+   08. SECCIONES: BENEFICIOS, PASOS Y CTA
+   ========================================================================== */
+
+/* Rejilla de tres tarjetas */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.feature-card {
+  padding: clamp(1.5rem, 2.5vw, 1.9rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
+  transition:
+    transform 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    background-color 0.3s var(--ease);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212, 180, 131, 0.32);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.feature-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 1.3rem;
+  border: 1px solid rgba(212, 180, 131, 0.2);
+  border-radius: 14px;
+  background: var(--gold-dim);
+  color: var(--gold-strong);
+}
+
+.feature-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.feature-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.28rem;
+  font-weight: 500;
+  margin-bottom: 0.55rem;
+}
+
+.feature-card p {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* Pasos numerados */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.step {
+  position: relative;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Pequeña línea dorada sobre el borde superior */
+.step::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 54px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.step-num {
+  display: block;
+  margin-bottom: 1rem;
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.step h3 {
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 500;
+  margin-bottom: 0.45rem;
+}
+
+.step p {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* Banda final de llamada a la acción */
+.cta {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: clamp(2.2rem, 5vw, 3.8rem);
+  border: 1px solid rgba(212, 180, 131, 0.22);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(600px 320px at 85% 0%, rgba(212, 180, 131, 0.18), transparent 62%),
+    radial-gradient(500px 300px at 0% 100%, rgba(74, 116, 168, 0.12), transparent 65%),
+    var(--surface);
+}
+
+.cta h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.15;
+  max-width: 20ch;
+}
+
+.cta p {
+  margin-top: 0.75rem;
+  max-width: 46ch;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+
+/* ==========================================================================
+   09. PIE DE PÁGINA
+   ========================================================================== */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding-block: 2rem;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+.footer-brand span {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.footer-copy {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.footer-nav {
+  display: flex;
+  gap: 1.4rem;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.footer-nav a {
+  transition: color 0.25s var(--ease);
+}
+
+.footer-nav a:hover {
+  color: var(--gold-strong);
+}
+
+
+/* ==========================================================================
+   10. PÁGINA DE REGISTRO (LAYOUT DE AUTENTICACIÓN)
+   Dos columnas: panel de marca a la izquierda y formulario a la derecha.
+   ========================================================================== */
+.auth {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  min-height: 100vh;
+}
+
+.auth-aside {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: clamp(1.75rem, 3.5vw, 3rem);
+  border-right: 1px solid var(--border);
+  background:
+    radial-gradient(720px 440px at 12% 8%, rgba(212, 180, 131, 0.16), transparent 62%),
+    radial-gradient(520px 420px at 95% 100%, rgba(74, 116, 168, 0.14), transparent 65%),
+    var(--bg-elevated);
+}
+
+/* Retícula sutil de fondo, difuminada en los bordes */
+.auth-aside::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(70% 60% at 40% 40%, #000 15%, transparent 100%);
+  mask-image: radial-gradient(70% 60% at 40% 40%, #000 15%, transparent 100%);
+  pointer-events: none;
+}
+
+/* El contenido queda por encima de la retícula */
+.auth-aside > * {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-aside-copy {
+  max-width: 30rem;
+}
+
+.auth-aside-copy h1 {
+  margin-block: 1rem 1.1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.15rem, 3.4vw, 3.1rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.auth-aside-copy h1 em {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.auth-aside-text {
+  max-width: 38ch;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.auth-benefits {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.9rem;
+}
+
+.auth-benefits li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.88rem;
+  color: var(--text-soft);
+}
+
+.auth-benefits li::before {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(212, 180, 131, 0.45);
+  border-radius: 50%;
+  background: var(--gold-dim);
+  color: var(--gold-strong);
+  font-size: 0.6rem;
+}
+
+.auth-quote {
+  max-width: 34ch;
+  padding-left: 1.2rem;
+  border-left: 1px solid var(--gold-line);
+}
+
+.auth-quote p {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.auth-quote cite {
+  display: block;
+  margin-top: 0.65rem;
+  font-size: 0.66rem;
+  font-style: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.auth-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.auth-card {
+  width: min(100%, 500px);
+  padding: clamp(1.6rem, 3.2vw, 2.6rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.auth-kicker {
+  display: inline-block;
+  margin-bottom: 0.9rem;
+  padding: 0.24rem 0.65rem;
+  border: 1px solid rgba(212, 180, 131, 0.28);
+  border-radius: 999px;
+  background: var(--gold-dim);
+  color: var(--gold-strong);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.auth-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 2.6vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.auth-head p {
+  margin-top: 0.6rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.auth-alt {
+  margin-top: 1.5rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.auth-alt a,
+.back-link {
+  color: var(--gold-strong);
+  font-weight: 500;
+  transition: color 0.25s var(--ease);
+}
+
+.auth-alt a:hover,
+.back-link:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.back-link {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+
+/* --------------------------------------------------------------------------
+   Variante para el login: formulario a la izquierda y marca a la derecha
+   -------------------------------------------------------------------------- */
+.page-login .auth {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+}
+
+.page-login .auth-aside {
+  border-right: 0;
+  border-left: 1px solid var(--border);
+  background:
+    radial-gradient(720px 440px at 88% 8%, rgba(212, 180, 131, 0.16), transparent 62%),
+    radial-gradient(520px 420px at 0% 100%, rgba(74, 116, 168, 0.14), transparent 65%),
+    var(--bg-elevated);
+}
+
+.page-login .auth-card {
+  width: min(100%, 480px);
+}
+
+/* Fila con label a la izquierda y enlace a la derecha */
+.label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.label-row label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-soft);
+}
+
+.link-inline {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--gold-strong);
+  transition: color 0.25s var(--ease);
+}
+
+.link-inline:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Fila de opciones: recordar sesión */
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.1rem;
+}
+
+/* Nota de seguridad bajo el botón */
+.auth-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.1rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.auth-note svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  color: var(--gold);
+}
+
+
+/* ==========================================================================
+   11. FORMULARIO
+   ========================================================================== */
+.auth-form {
+  display: grid;
+  gap: 1.05rem;
+  margin-top: 1.7rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.field > label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-soft);
+}
+
+/* Estilos compartidos por los input de texto, email y password */
+.input {
+  width: 100%;
+  padding: 0.82rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(8, 11, 16, 0.55);
+  color: var(--text);
+  font-size: 0.9rem;
+  transition:
+    border-color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    background-color 0.25s var(--ease);
+}
+
+.input::placeholder {
+  color: #5c6a7c;
+}
+
+.input:hover {
+  border-color: var(--border-strong);
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(212, 180, 131, 0.65);
+  background: rgba(8, 11, 16, 0.85);
+  box-shadow: 0 0 0 4px rgba(212, 180, 131, 0.12);
+}
+
+/* Evita el fondo amarillo del autocompletado en Chrome */
+.input:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  box-shadow: 0 0 0 1000px #0b1119 inset;
+}
+
+/* --------------------------------------------------------------------------
+   Mostrar / ocultar contraseña
+   El input y el botón viven dentro de .input-password, que sirve de ancla
+   para colocar el ojo a la derecha sin tapar el texto.
+   -------------------------------------------------------------------------- */
+.input-password {
+  position: relative;
+}
+
+.input-password .input {
+  padding-right: 2.9rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.45rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 0.2s var(--ease),
+    background-color 0.2s var(--ease);
+}
+
+.password-toggle:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  color: var(--text);
+}
+
+.password-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Un solo icono visible según aria-pressed: ojo abierto u ojo tachado. */
+.password-toggle .icon-eye-off {
+  display: none;
+}
+
+.password-toggle[aria-pressed="true"] .icon-eye {
+  display: none;
+}
+
+.password-toggle[aria-pressed="true"] .icon-eye-off {
+  display: block;
+}
+
+/* Estado de error nativo: solo se muestra cuando el usuario ya interactuó */
+.input:user-invalid {
+  border-color: rgba(229, 145, 145, 0.6);
+}
+
+.hint {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* Fila del checkbox de términos */
+.field--check {
+  margin-top: 0.1rem;
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.check input {
+  width: 18px;
+  height: 18px;
+  margin-top: 0.12rem;
+  flex: 0 0 auto;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+
+.check a {
+  color: var(--gold-strong);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.check a:hover {
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Estados de validación (los aplica js/registro.js)
+   -------------------------------------------------------------------------- */
+
+/* Borde rojo cuando el campo tiene un error */
+.field.is-invalid .input {
+  border-color: rgba(229, 145, 145, 0.6);
+  background: rgba(229, 145, 145, 0.04);
+}
+
+.field.is-invalid .input:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(229, 145, 145, 0.12);
+}
+
+/* Borde verde cuando el campo ya es válido */
+.field.is-valid .input {
+  border-color: rgba(99, 214, 163, 0.45);
+}
+
+.field.is-valid .input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(99, 214, 163, 0.1);
+}
+
+/* Mensaje de error debajo de cada campo */
+.field-error {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--red);
+}
+
+/* Mientras no haya texto, el párrafo no ocupa espacio */
+.field-error:empty {
+  display: none;
+}
+
+/* El checkbox se tiñe de verde al aceptarlo */
+.field--check.is-valid .check input {
+  accent-color: var(--green);
+}
+
+/* --------------------------------------------------------------------------
+   Medidor de seguridad de la contraseña
+   -------------------------------------------------------------------------- */
+.strength {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.1rem;
+}
+
+.strength[hidden] {
+  display: none;
+}
+
+.strength-meter {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.strength-meter span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: #c98d6b;
+  transition:
+    width 0.35s var(--ease),
+    background-color 0.35s var(--ease);
+}
+
+.strength[data-level="media"] .strength-meter span {
+  background: var(--gold);
+}
+
+.strength[data-level="fuerte"] .strength-meter span {
+  background: var(--green);
+}
+
+.strength-text {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.strength-text strong {
+  font-weight: 600;
+  color: #d3a184;
+}
+
+.strength[data-level="media"] .strength-text strong {
+  color: var(--gold-strong);
+}
+
+.strength[data-level="fuerte"] .strength-text strong {
+  color: var(--green);
+}
+
+/* --------------------------------------------------------------------------
+   Mensaje general del formulario (error de red o registro correcto)
+   -------------------------------------------------------------------------- */
+.form-message {
+  display: none;
+  margin-top: 0.15rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.form-message.is-error {
+  display: block;
+  border-color: rgba(229, 145, 145, 0.28);
+  background: rgba(229, 145, 145, 0.08);
+  color: var(--red);
+}
+
+.form-message.is-success {
+  display: block;
+  border-color: rgba(99, 214, 163, 0.28);
+  background: rgba(99, 214, 163, 0.08);
+  color: var(--green);
+}
+
+/* Botón deshabilitado mientras se envía el formulario */
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+
+/* ==========================================================================
+   12. ANIMACIONES
+   ========================================================================== */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 180, 131, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(212, 180, 131, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 180, 131, 0);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+/* Entrada suave de los bloques principales */
+.hero-copy {
+  animation: fade-up 0.8s var(--ease) both;
+}
+
+.hero-visual {
+  animation: fade-up 0.9s var(--ease) 0.12s both;
+}
+
+.auth-card {
+  animation: fade-up 0.7s var(--ease) both;
+}
+
+.auth-aside-copy {
+  animation: fade-up 0.8s var(--ease) 0.05s both;
+}
+
+/* Respeta la preferencia del sistema de reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ==========================================================================
+   13. RESPONSIVE
+   Cada media query aplica estilos cuando el ancho es igual o menor.
+   ========================================================================== */
+
+/* Tabletas grandes */
+@media (max-width: 1024px) {
+  .hero-grid {
+    gap: 3rem;
+  }
+
+  .float-card {
+    left: -0.75rem;
+  }
+}
+
+/* Tabletas: el hero pasa a una columna */
+@media (max-width: 900px) {
+  .main-nav {
+    display: none;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    padding-block: 3.5rem 6rem;
+  }
+
+  .hero-copy {
+    max-width: 620px;
+  }
+
+  .hero-title {
+    max-width: 18ch;
+  }
+
+  .hero-visual {
+    width: min(100%, 540px);
+    margin-inline: auto;
+  }
+
+  .dashboard {
+    margin-inline: auto;
+  }
+
+  .float-card {
+    left: 0.5rem;
+    bottom: -5.5rem;
+  }
+
+  .auth {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .auth-aside {
+    gap: 1.6rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    padding-block: 2rem;
+  }
+
+  .auth-aside-copy h1 {
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    max-width: 24ch;
+  }
+
+  .auth-aside-text,
+  .auth-benefits,
+  .auth-quote {
+    display: none;
+  }
+
+  .auth-main {
+    padding-block: 2.5rem 3rem;
+  }
+
+  /* En el login, el panel de marca pasa arriba y el formulario debajo */
+  .page-login .auth {
+    grid-template-columns: 1fr;
+  }
+
+  .page-login .auth-aside {
+    order: -1;
+    border-left: 0;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+/* Móviles grandes */
+@media (max-width: 720px) {
+  .feature-grid,
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .step {
+    padding-top: 1.3rem;
+  }
+
+  .cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .auth-card {
+    padding: 1.6rem;
+  }
+
+  .hero-actions .btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* Móviles */
+@media (max-width: 600px) {
+  .header-actions .btn-ghost {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: clamp(2.3rem, 10vw, 3rem);
+  }
+
+  .hero-points {
+    gap: 0.5rem 1rem;
+  }
+
+  .float-card {
+    position: static;
+    width: 100%;
+    margin-top: 1.2rem;
+    animation: none;
+  }
+}
+
+/* Pantallas muy estrechas */
+@media (max-width: 480px) {
+  .container {
+    width: calc(100% - 2rem);
+  }
+
+  .header-inner {
+    height: 68px;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+
+  .brand-name {
+    font-size: 1.08rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .cta-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .cta-actions .btn {
+    width: 100%;
+  }
+
+  .auth-main {
+    padding-inline: 1rem;
+  }
+
+  .auth-card {
+    padding: 1.35rem;
+  }
+
+  .dash-list .dash-item:nth-child(3) {
+    display: none; /* en pantallas pequeñas se oculta el tercer movimiento */
+  }
+}
+
+
+/* ==========================================================================
+   14. PANEL DE GASTOS (gastos.html)
+   ========================================================================== */
+
+.page-app {
+  color-scheme: dark; /* selects y calendarios nativos en modo oscuro */
+}
+
+/* En pantallas pequeñas el CSS general oculta los botones ghost de la
+   cabecera; en el panel de gastos el botón "Salir" debe seguir visible. */
+.page-app .header-actions .btn-ghost {
+  display: inline-flex;
+}
+
+.app-nav a[aria-current="page"] {
+  color: var(--gold-strong);
+}
+
+.app-nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* Chip con el nombre del usuario conectado */
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  max-width: 220px;
+  padding: 0.28rem 0.75rem 0.28rem 0.32rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-soft);
+  font-size: 0.76rem;
+}
+
+.user-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--gold-line);
+  border-radius: 50%;
+  background: var(--gold-dim);
+  color: var(--gold-strong);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Contenido principal */
+.app-main {
+  padding-block: 2.6rem 4.5rem;
+}
+
+.app-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1.8rem;
+}
+
+.app-title {
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.app-title em {
+  color: var(--gold-strong);
+  font-style: italic;
+}
+
+.app-subtitle {
+  max-width: 55ch;
+  margin-top: 0.55rem;
+  color: var(--muted);
+}
+
+.app-head-actions {
+  flex-shrink: 0;
+}
+
+/* Tarjetas de resumen */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.stat-card {
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.012)),
+    var(--surface);
+  box-shadow: 0 24px 60px -45px rgba(0, 0, 0, 0.9);
+}
+
+.stat-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stat-value {
+  margin-top: 0.4rem;
+  color: var(--gold-strong);
+  font-family: var(--font-body);
+  font-size: clamp(1.45rem, 2.2vw, 1.8rem);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.stat-value--text {
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.stat-hint {
+  margin-top: 0.3rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+/* Distribución principal + lateral */
+.expenses-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.95fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.expenses-main,
+.expenses-side {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+/* Paneles */
+.panel {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01)),
+    var(--surface);
+}
+
+.panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.panel-subtitle {
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.panel-badge {
+  flex-shrink: 0;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--gold-line);
+  border-radius: 999px;
+  background: var(--gold-dim);
+  color: var(--gold-strong);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.panel-badge[hidden] {
+  display: none;
+}
+
+/* Formulario de gasto */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.field--full {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+/* Selects y fechas con aspecto coherente en modo oscuro */
+select.input {
+  padding-right: 2.4rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%238391a4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.95rem center;
+  background-size: 12px;
+  cursor: pointer;
+}
+
+select.input option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.65);
+}
+
+/* Filtros */
+.filters-form {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.filters-actions {
+  display: flex;
+}
+
+.filters-actions .btn {
+  width: 100%;
+}
+
+.btn-sm {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.75rem;
+}
+
+/* Tabla de movimientos */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.expenses-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.expenses-table th {
+  padding: 0.55rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.expenses-table td {
+  padding: 0.7rem 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  vertical-align: middle;
+}
+
+.expenses-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.expenses-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.expenses-table .is-right {
+  text-align: right;
+}
+
+.expense-name {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.amount-cell {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.category-pill {
+  display: inline-flex;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-soft);
+  font-size: 0.66rem;
+  white-space: nowrap;
+}
+
+.actions-cell {
+  white-space: nowrap;
+}
+
+.row-action {
+  padding: 0.28rem 0.45rem;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  transition:
+    color 0.2s var(--ease),
+    background-color 0.2s var(--ease);
+}
+
+.row-action:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.row-action--danger:hover {
+  color: var(--red);
+  background: rgba(229, 145, 145, 0.08);
+}
+
+.table-empty {
+  padding: 1.5rem 0.75rem !important;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Gráfica de barras por mes */
+.month-chart {
+  display: flex;
+  align-items: stretch;
+  gap: 0.35rem;
+  height: 190px;
+  margin-top: 1.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.month-col {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.month-track {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.month-fill {
+  display: block;
+  width: 100%;
+  height: 0;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, var(--gold-strong), rgba(212, 180, 131, 0.22));
+  transition: height 0.45s var(--ease);
+}
+
+.month-col:hover .month-fill,
+.month-col:focus-visible .month-fill {
+  filter: brightness(1.18);
+}
+
+.month-label {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 0.55rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.chart-empty {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.chart-empty[hidden] {
+  display: none;
+}
+
+/* Desglose por categoría */
+.category-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.category-row {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.category-row-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.76rem;
+}
+
+.category-row-head strong {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.category-track {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.category-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gold), rgba(212, 180, 131, 0.35));
+}
+
+.category-row small {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+/* Aviso flotante */
+.toast {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 100;
+  max-width: min(360px, calc(100vw - 2rem));
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+  box-shadow: var(--shadow-lg);
+  font-size: 0.8rem;
+}
+
+.toast[hidden] {
+  display: none;
+}
+
+.toast.is-success {
+  border-color: rgba(99, 214, 163, 0.35);
+  color: var(--green);
+}
+
+.toast.is-error {
+  border-color: rgba(229, 145, 145, 0.35);
+  color: var(--red);
+}
+
+/* El formulario no debe quedar oculto bajo la cabecera fija */
+#form-panel {
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+}
+
+/* Responsive del panel de gastos */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .expenses-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .expenses-side {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .app-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .expenses-side {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .field--full {
+    grid-column: 1 / -1;
+  }
+
+  .filters-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters-actions {
+    grid-column: 1 / -1;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  /* La tabla se convierte en tarjetas apiladas */
+  .table-wrap {
+    overflow: visible;
+  }
+
+  .expenses-table thead {
+    display: none;
+  }
+
+  .expenses-table,
+  .expenses-table tbody,
+  .expenses-table tr,
+  .expenses-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .expenses-table tr {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .expenses-table tr:last-child {
+    border-bottom: 0;
+  }
+
+  .expenses-table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.2rem 0;
+    border: 0;
+    text-align: left;
+  }
+
+  .expenses-table td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .expenses-table .is-right {
+    text-align: left;
+  }
+
+  .expenses-table td.actions-cell {
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding-top: 0.55rem;
+  }
+
+  .expenses-table .table-empty {
+    display: block;
+    text-align: center;
+  }
+
+  .expenses-table .table-empty::before {
+    content: none;
+  }
+
+  .month-chart {
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-main {
+    padding-block: 1.6rem 3rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid,
+  .filters-form {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-actions {
+    grid-column: auto;
+  }
+
+  .panel {
+    padding: 1rem;
+  }
+
+  .app-title {
+    font-size: 2rem;
+  }
+}

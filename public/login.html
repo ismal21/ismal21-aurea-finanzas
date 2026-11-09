@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Inicia sesión en Aurea Finanzas y retoma el control de tus finanzas personales.">
+  <title>Iniciar sesión · Aurea Finanzas</title>
+
+  <!-- Mismas fuentes que el resto del sitio -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+  <!-- Hoja de estilos compartida -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="page-auth page-login">
+
+  <main class="auth">
+
+    <!-- ============================================================
+         FORMULARIO (a la izquierda en escritorio)
+         ============================================================ -->
+    <section class="auth-main">
+      <div class="auth-card auth-card--login">
+
+        <header class="auth-head">
+          <span class="auth-kicker">Bienvenido de nuevo</span>
+          <h2>Inicia sesión</h2>
+          <p>Accede a tu panel y retoma tus finanzas donde las dejaste.</p>
+        </header>
+
+        <!-- FORM:
+             - action: ruta de tu API (pendiente de implementar).
+             - name: clave con la que el backend leerá cada valor.
+             - autocomplete="current-password": ayuda a los gestores de contraseñas. -->
+        <form class="auth-form" id="login-form" action="/api/auth/login" method="post">
+
+          <div class="field">
+            <label for="login-email">Correo electrónico</label>
+            <input
+              class="input"
+              id="login-email"
+              name="email"
+              type="email"
+              placeholder="ana@correo.com"
+              autocomplete="email"
+              inputmode="email"
+              maxlength="120"
+              required
+              aria-describedby="login-email-error">
+            <p class="field-error" id="login-email-error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <!-- label + enlace en la misma fila; el enlace es un placeholder
+                 hasta que exista la página de recuperación -->
+            <div class="label-row">
+              <label for="login-password">Contraseña</label>
+              <a class="link-inline" href="#">¿La olvidaste?</a>
+            </div>
+            <div class="input-password">
+              <input
+                class="input"
+                id="login-password"
+                name="password"
+                type="password"
+                placeholder="Tu contraseña"
+                autocomplete="current-password"
+                required
+                aria-describedby="login-password-error">
+
+              <!-- Botón para alternar entre ocultar y mostrar la contraseña.
+                   aria-pressed indica el estado y aria-controls el campo afectado. -->
+              <button
+                class="password-toggle"
+                type="button"
+                data-password-toggle="login-password"
+                aria-label="Mostrar contraseña"
+                aria-pressed="false"
+                aria-controls="login-password"
+                title="Mostrar contraseña">
+                <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 3l18 18"/>
+                  <path d="M10.6 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.1 4.1"/>
+                  <path d="M6.6 6.6A17.7 17.7 0 0 0 2 12s3.6 7 10 7a10.7 10.7 0 0 0 4.1-.8"/>
+                  <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+                </svg>
+              </button>
+            </div>
+
+            <p class="field-error" id="login-password-error" aria-live="polite"></p>
+          </div>
+
+          <div class="form-options">
+            <label class="check" for="recordarme">
+              <input id="recordarme" name="recordarme" type="checkbox">
+              <span>Mantener mi sesión iniciada</span>
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-block" type="submit"> Entrar </button>
+
+          <!-- Aquí se mostrarán errores generales o el estado de carga -->
+          <p class="form-message" id="login-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <p class="auth-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="4" y="10" width="16" height="10" rx="2.5"/>
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+            <path d="M12 14v2"/>
+          </svg>
+          Tus datos siguen bajo tu control.
+        </p>
+
+        <p class="auth-alt">
+          ¿Aún no tienes cuenta?
+          <a href="registro.html">Crear una cuenta</a>
+        </p>
+      </div>
+
+      <a class="back-link" href="index.html">← Volver al inicio</a>
+    </section>
+
+    <!-- ============================================================
+         PANEL DE MARCA (a la derecha en escritorio)
+         ============================================================ -->
+    <aside class="auth-aside">
+      <a class="brand" href="index.html" aria-label="Aurea Finanzas, volver al inicio">
+        <span class="brand-mark" aria-hidden="true">A</span>
+        <span class="brand-name">Aurea<span>Finanzas</span></span>
+      </a>
+
+      <div class="auth-aside-copy">
+        <p class="eyebrow">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          Sesión segura
+        </p>
+        <h1>Tu dinero te estaba <em>esperando</em>.</h1>
+        <p class="auth-aside-text">
+          Vuelve a tu panel y comprueba cómo avanzan tus presupuestos, tus metas y tu ahorro.
+        </p>
+
+        <ul class="auth-benefits">
+          <li>Retoma tus presupuestos donde los dejaste</li>
+          <li>Revisa tus movimientos más recientes</li>
+          <li>Todo tu historial en un solo lugar</li>
+        </ul>
+      </div>
+
+      <blockquote class="auth-quote">
+        <p>“La tranquilidad financiera empieza por saber exactamente dónde estás.”</p>
+        <cite>— Filosofía Aurea</cite>
+      </blockquote>
+    </aside>
+
+  </main>
+
+  <!-- Mostrar/ocultar contraseña (compartido con el registro). -->
+  <script src="js/password-toggle.js" defer></script>
+
+  <!-- Validación y avisos del login (credenciales incorrectas, errores de red).
+       "defer" ejecuta el script cuando el HTML ya está cargado. -->
+  <script src="js/login.js" defer></script>
+</body>
+</html>

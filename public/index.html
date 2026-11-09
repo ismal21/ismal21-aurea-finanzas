@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       HEAD: información que NO se ve en la página.
+       Aquí van los metadatos, las fuentes y el enlace al CSS.
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aurea Finanzas: controla tus gastos, presupuestos y metas de ahorro en un solo lugar.">
+  <title>Aurea Finanzas · Control de finanzas personales</title>
+
+  <!-- Fuentes de Google: Playfair Display (títulos) e Inter (texto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+  <!-- Enlace a la hoja de estilos. La ruta es relativa a este archivo:
+       index.html está en /public y el CSS en /public/css/styles.css -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="page-home">
+  <!-- Accesibilidad: primer elemento enfocable para saltar la navegación -->
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <!-- ============================================================
+       HEADER: barra superior fija con marca, navegación y acciones
+       ============================================================ -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <!-- La marca es un enlace al inicio -->
+      <a class="brand" href="index.html" aria-label="Aurea Finanzas, ir al inicio">
+        <span class="brand-mark" aria-hidden="true">A</span>
+        <span class="brand-name">Aurea<span>Finanzas</span></span>
+      </a>
+
+      <!-- NAV: agrupa enlaces de navegación. aria-label lo describe -->
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a href="#beneficios">Beneficios</a>
+        <a href="#como-funciona">Cómo funciona</a>
+      </nav>
+
+      <div class="header-actions">
+        <!-- login.html lo vas a crear tú: el enlace ya está listo -->
+        <a class="btn btn-ghost" href="login.html">Iniciar sesión</a>
+        <a class="btn btn-primary" href="registro.html">Crear cuenta</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN: contenido principal único de la página -->
+  <main id="contenido">
+
+    <!-- ==========================================================
+         HERO: primera impresión + llamadas a la acción
+         ========================================================== -->
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            Finanzas personales, sin ruido
+          </p>
+
+          <h1 class="hero-title">
+            Toma el control de tu dinero con <em>claridad</em>.
+          </h1>
+
+          <p class="hero-text">
+            Registra tus ingresos y gastos, define presupuestos y observa cómo crece tu ahorro.
+            Todo en un panel elegante, simple y pensado para decisiones reales.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="registro.html">
+              Crear cuenta gratis
+              <span aria-hidden="true">→</span>
+            </a>
+            <a class="btn btn-outline btn-lg" href="login.html">Ya tengo cuenta</a>
+          </div>
+
+          <ul class="hero-points">
+            <li>Sin tarjetas de crédito</li>
+            <li>Configúralo en 2 minutos</li>
+            <li>Tus datos, bajo tu control</li>
+          </ul>
+        </div>
+
+        <!-- Visual decorativo: simula el panel de la app -->
+        <div class="hero-visual">
+          <div class="dashboard" role="img" aria-label="Vista previa del panel de finanzas con balance, gráfico mensual y movimientos recientes">
+            <div class="dash-head">
+              <div>
+                <p class="dash-label">Patrimonio neto</p>
+                <p class="dash-amount">$48.250<span>,00</span></p>
+              </div>
+              <span class="badge badge-up">+12,4%</span>
+            </div>
+
+            <div class="chart">
+              <div class="chart-bars" aria-hidden="true">
+                <!-- La altura de cada barra se define con una variable CSS inline.
+                     Es una forma limpia de pasar un valor desde el HTML al CSS. -->
+                <span style="--h: 38%"></span>
+                <span style="--h: 52%"></span>
+                <span style="--h: 45%"></span>
+                <span style="--h: 63%"></span>
+                <span style="--h: 58%"></span>
+                <span style="--h: 74%"></span>
+                <span style="--h: 69%"></span>
+                <span style="--h: 82%"></span>
+                <span style="--h: 76%"></span>
+                <span style="--h: 91%"></span>
+                <span style="--h: 86%"></span>
+                <span style="--h: 100%"></span>
+              </div>
+              <div class="chart-labels" aria-hidden="true">
+                <span>ENE</span>
+                <span>ABR</span>
+                <span>JUL</span>
+                <span>OCT</span>
+              </div>
+            </div>
+
+            <ul class="dash-list">
+              <li class="dash-item">
+                <span class="dash-icon dash-icon--gold" aria-hidden="true">S</span>
+                <div class="dash-info">
+                  <p>Salario</p>
+                  <small>Nómina · hoy</small>
+                </div>
+                <span class="dash-amount-small is-positive">+3.200,00</span>
+              </li>
+              <li class="dash-item">
+                <span class="dash-icon" aria-hidden="true">A</span>
+                <div class="dash-info">
+                  <p>Alquiler</p>
+                  <small>Vivienda · ayer</small>
+                </div>
+                <span class="dash-amount-small is-negative">−950,00</span>
+              </li>
+              <li class="dash-item">
+                <span class="dash-icon" aria-hidden="true">M</span>
+                <div class="dash-info">
+                  <p>Mercado</p>
+                  <small>Alimentación · ayer</small>
+                </div>
+                <span class="dash-amount-small is-negative">−128,40</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Tarjeta flotante de meta de ahorro -->
+          <div class="float-card">
+            <div class="float-head">
+              <p>Meta de ahorro</p>
+              <strong>68%</strong>
+            </div>
+            <div class="progress" aria-hidden="true">
+              <span style="--value: 68%"></span>
+            </div>
+            <small>Viaje · $3.400 de $5.000</small>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         BENEFICIOS: tres tarjetas con iconos SVG
+         ========================================================== -->
+    <section class="section" id="beneficios">
+      <div class="container">
+
+        <div class="section-head">
+          <p class="kicker">Todo en su lugar</p>
+          <h2 class="section-title">Menos planillas. Más decisiones.</h2>
+          <p class="section-text">
+            Una herramienta sobria para entender a dónde va tu dinero y qué puedes hacer con él.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+
+          <!-- Cada tarjeta es un <article> porque tiene sentido por sí sola -->
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7.5Z"/>
+                <path d="M3 8h15"/>
+                <path d="M16 13h2"/>
+              </svg>
+            </div>
+            <h3>Presupuestos claros</h3>
+            <p>Asigna un límite a cada categoría y recibe avisos antes de pasarte. Sin sorpresas a fin de mes.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19V5"/>
+                <path d="M4 19h16"/>
+                <path d="m7 15 3.5-4 3 2.5L20 7"/>
+                <path d="M20 11V7h-4"/>
+              </svg>
+            </div>
+            <h3>Ahorro con propósito</h3>
+            <p>Crea metas, aporta cuando puedas y mira el progreso crecer con cada pequeño paso.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3 5 6v5c0 4.4 3 8.4 7 10 4-1.6 7-5.6 7-10V6l-7-3Z"/>
+                <path d="m9.5 12 1.8 1.8L15 10"/>
+              </svg>
+            </div>
+            <h3>Reportes sin esfuerzo</h3>
+            <p>Visualiza tendencias por mes, categoría y cuenta. Entiende tu dinero de un vistazo.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         CÓMO FUNCIONA: pasos numerados
+         ========================================================== -->
+    <section class="section section--tight" id="como-funciona">
+      <div class="container">
+
+        <div class="section-head section-head--center">
+          <p class="kicker">Empieza hoy</p>
+          <h2 class="section-title">Tres pasos y ya estás dentro.</h2>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num">01</span>
+            <h3>Crea tu cuenta</h3>
+            <p>Solo necesitas tu nombre, un correo y una contraseña segura.</p>
+          </li>
+          <li class="step">
+            <span class="step-num">02</span>
+            <h3>Registra tus movimientos</h3>
+            <p>Añade ingresos y gastos, o define tus presupuestos mensuales.</p>
+          </li>
+          <li class="step">
+            <span class="step-num">03</span>
+            <h3>Decide con claridad</h3>
+            <p>Revisa tu panel, ajusta lo necesario y alcanza tus metas.</p>
+          </li>
+        </ol>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         LLAMADA A LA ACCIÓN FINAL
+         ========================================================== -->
+    <section class="section">
+      <div class="container">
+        <div class="cta">
+          <div class="cta-copy">
+            <h2>Tu próximo mes puede empezar ordenado.</h2>
+            <p>Crea tu cuenta gratis y da el primer paso hacia finanzas más tranquilas.</p>
+          </div>
+          <div class="cta-actions">
+            <a class="btn btn-primary btn-lg" href="registro.html">Crear cuenta</a>
+            <a class="btn btn-outline btn-lg" href="login.html">Iniciar sesión</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER: información secundaria de la página
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-brand">Aurea <span>Finanzas</span></p>
+      <p class="footer-copy">© 2026 · Proyecto de práctica. Hecho con HTML y CSS.</p>
+      <nav class="footer-nav" aria-label="Enlaces legales">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Cuando tengas JavaScript, descomenta esta línea.
+       "defer" hace que el script se ejecute después de leer el HTML. -->
+  <!-- <script src="js/main.js" defer></script> -->
+</body>
+</html>
